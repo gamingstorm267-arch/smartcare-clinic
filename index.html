@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartCare Medical Clinic - AI-Powered Healthcare with real-time medical search.">
+  <title>SmartCare Clinic | AI-Powered Healthcare</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <span class="nav-logo">🏥 SmartCare</span>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#doctors">Doctors</a>
+    <a href="#appointment">Book</a>
+    <a href="#contact">Contact</a>
+    <a href="client.html" style="color:var(--accent)">Client Portal</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">✦ AI-Powered Healthcare Platform</div>
+  <h1>Your Health,<br>Powered by Intelligence</h1>
+  <p>Advanced AI that searches real medical databases to answer your health questions — plus seamless appointment booking.</p>
+  <div class="hero-btns">
+    <a href="#appointment" class="btn btn-glow">📅 Book Appointment</a>
+    <a href="#services" class="btn btn-outline">Explore Services</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-num">50+</span>
+      <span class="stat-label">Doctors</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">20K+</span>
+      <span class="stat-label">Patients</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">24/7</span>
+      <span class="stat-label">Emergency</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">15+</span>
+      <span class="stat-label">Specialties</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="section-label">What We Offer</div>
+  <h2 class="section-title">Our Medical Services</h2>
+  <p class="section-sub">Comprehensive healthcare solutions delivered by experienced specialists using modern technology.</p>
+
+  <div class="services-grid">
+    <div class="glass-card service-card">
+      <span class="service-icon">🩺</span>
+      <h3>General Checkup</h3>
+      <p>Comprehensive health assessments and preventive screenings for all age groups.</p>
+    </div>
+    <div class="glass-card service-card">
+      <span class="service-icon">❤️</span>
+      <h3>Cardiology</h3>
+      <p>Advanced heart care with ECG, echocardiography, and cardiac consultations.</p>
+    </div>
+    <div class="glass-card service-card">
+      <span class="service-icon">👶</span>
+      <h3>Pediatrics</h3>
+      <p>Expert child healthcare from newborns to adolescents, including vaccinations.</p>
+    </div>
+    <div class="glass-card service-card">
+      <span class="service-icon">🧠</span>
+      <h3>Neurology</h3>
+      <p>Diagnosis and treatment of brain, spine and nervous system disorders.</p>
+    </div>
+    <div class="glass-card service-card">
+      <span class="service-icon">🔬</span>
+      <h3>Diagnostics</h3>
+      <p>Full laboratory, imaging, and pathology services with rapid results.</p>
+    </div>
+    <div class="glass-card service-card">
+      <span class="service-icon">🦷</span>
+      <h3>Dentistry</h3>
+      <p>Complete dental care including cosmetic, restorative, and orthodontic services.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DOCTORS ── -->
+<section id="doctors" style="background:rgba(255,255,255,0.02); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="section-label">Meet the Team</div>
+  <h2 class="section-title">Our Expert Doctors</h2>
+  <p class="section-sub">Board-certified specialists committed to providing you with the highest quality care.</p>
+
+  <div class="doctors-grid" style="margin-top:52px">
+    <div class="glass-card doctor-card">
+      <div class="doctor-avatar">👨‍⚕️</div>
+      <div class="doctor-info">
+        <h3>Dr. Arjun Mehta</h3>
+        <p>MBBS, MD – 15 yrs experience</p>
+        <span class="doctor-badge">Cardiologist</span>
+      </div>
+    </div>
+    <div class="glass-card doctor-card">
+      <div class="doctor-avatar">👩‍⚕️</div>
+      <div class="doctor-info">
+        <h3>Dr. Priya Sharma</h3>
+        <p>MBBS, DCH – 12 yrs experience</p>
+        <span class="doctor-badge">Pediatrician</span>
+      </div>
+    </div>
+    <div class="glass-card doctor-card">
+      <div class="doctor-avatar">👨‍⚕️</div>
+      <div class="doctor-info">
+        <h3>Dr. Rahul Verma</h3>
+        <p>MBBS, DM – 18 yrs experience</p>
+        <span class="doctor-badge">Neurologist</span>
+      </div>
+    </div>
+    <div class="glass-card doctor-card">
+      <div class="doctor-avatar">👩‍⚕️</div>
+      <div class="doctor-info">
+        <h3>Dr. Sunita Rao</h3>
+        <p>BDS, MDS – 10 yrs experience</p>
+        <span class="doctor-badge">Dentist</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── APPOINTMENT ── -->
+<section id="appointment">
+  <div class="section-label">Schedule a Visit</div>
+  <h2 class="section-title">Book an Appointment</h2>
+  <p class="section-sub">Fill in the form below and we'll confirm your appointment within 24 hours.</p>
+
+  <div class="appt-grid">
+    <div class="form-field">
+      <label>Full Name *</label>
+      <input type="text" id="apptName" placeholder="e.g. Rahul Kumar">
+    </div>
+    <div class="form-field">
+      <label>Phone Number *</label>
+      <input type="tel" id="apptPhone" placeholder="+91 98765 43210">
+    </div>
+    <div class="form-field">
+      <label>Email Address</label>
+      <input type="email" id="apptEmail" placeholder="you@example.com">
+    </div>
+    <div class="form-field">
+      <label>Preferred Date *</label>
+      <input type="date" id="apptDate">
+    </div>
+    <div class="form-field full">
+      <label>Select Doctor *</label>
+      <select id="apptDoctor">
+        <option value="">— Choose a Doctor —</option>
+        <option>Dr. Arjun Mehta – Cardiologist</option>
+        <option>Dr. Priya Sharma – Pediatrician</option>
+        <option>Dr. Rahul Verma – Neurologist</option>
+        <option>Dr. Sunita Rao – Dentist</option>
+      </select>
+    </div>
+    <div class="form-field full">
+      <label>Reason for Visit</label>
+      <input type="text" id="apptReason" placeholder="Brief description of your concern">
+    </div>
+    <div class="full">
+      <button class="btn btn-glow" onclick="bookAppointment()" style="width:100%;justify-content:center;padding:16px">
+        📅 Confirm Booking
+      </button>
+    </div>
+    <div class="full" style="text-align:center;margin-top:8px">
+      <a href="admin.html" class="btn btn-outline" style="display:inline-flex">📊 View Admin Dashboard</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" style="text-align:center">
+  <div class="section-label">Get in Touch</div>
+  <h2 class="section-title">Contact Us</h2>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:40px">
+    <div class="glass-card" style="text-align:center;min-width:200px">
+      <div style="font-size:2rem;margin-bottom:10px">📞</div>
+      <div style="font-weight:700">Phone</div>
+      <div style="color:var(--muted);margin-top:4px">+91 98765 43210</div>
+    </div>
+    <div class="glass-card" style="text-align:center;min-width:200px">
+      <div style="font-size:2rem;margin-bottom:10px">✉️</div>
+      <div style="font-weight:700">Email</div>
+      <div style="color:var(--muted);margin-top:4px">care@smartcare.in</div>
+    </div>
+    <div class="glass-card" style="text-align:center;min-width:200px">
+      <div style="font-size:2rem;margin-bottom:10px">📍</div>
+      <div style="font-weight:700">Location</div>
+      <div style="color:var(--muted);margin-top:4px">123 Health Street, Mumbai</div>
+    </div>
+    <div class="glass-card" style="text-align:center;min-width:200px">
+      <div style="font-size:2rem;margin-bottom:10px">🕘</div>
+      <div style="font-weight:700">Hours</div>
+      <div style="color:var(--muted);margin-top:4px">Mon–Sat: 9 AM – 8 PM</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-logo">🏥 SmartCare Medical Clinic</span>
+  <p>© 2026 SmartCare. All rights reserved.</p>
+  <p style="color:var(--muted)">AI-Powered · Secure · Trusted</p>
+</footer>
+
+<!-- ── AI CHATBOT ── -->
+<div id="chatbot">
+  <div id="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <div class="chat-title">MediBot AI</div>
+        <div class="chat-status"><span class="status-dot"></span> Online · Medical Search Active</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="chat-icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
+      <button class="chat-icon-btn" onclick="toggleChat()" title="Minimize">✕</button>
+    </div>
+  </div>
+  <div id="chat-messages"></div>
+  <div id="chat-input-area">
+    <input type="text" id="userInput" placeholder="Ask any medical question..." onkeydown="if(event.key==='Enter')sendMessage()">
+    <button id="sendBtn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- FAB to reopen chat -->
+<button id="chat-fab" onclick="toggleChat()" title="Open MediBot">🤖</button>
+
+<!-- Settings Modal for Gemini API Key -->
+<div id="settings-modal" class="hidden">
+  <div class="settings-content glass-card">
+    <h3>⚙️ AI Settings</h3>
+    <p style="color:var(--muted); font-size:14px; margin: 8px 0 16px;">Enter your Gemini API key to enable advanced medical AI conversational capabilities. Stored securely in your browser.</p>
+    <div class="form-field full">
+      <input type="password" id="geminiApiKey" placeholder="Enter Gemini API Key (AIzaSy...)">
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button class="btn btn-outline" onclick="closeSettings()" style="flex:1; justify-content:center;">Cancel</button>
+      <button class="btn btn-glow" onclick="saveSettings()" style="flex:1; justify-content:center;">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<script src="drugs_db.js"></script>
+<script src="chatbot.js"></script>
+</body>
+</html>

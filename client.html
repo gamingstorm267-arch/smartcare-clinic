@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Client Portal - Track your application status.">
+  <title>Client Portal | SmartCare</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .portal-container {
+      padding: 120px 40px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0b0f1a;
+      border-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-Pending {
+      background: rgba(255, 171, 64, 0.15);
+      color: var(--warn);
+      border: 1px solid var(--warn);
+    }
+
+    .status-Approved {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .status-Rejected {
+      background: rgba(255, 82, 82, 0.15);
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
+
+    .result-card {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .result-info p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="toast"></div>
+
+  <!-- ── NAVIGATION ── -->
+  <nav>
+    <a href="index.html" class="nav-logo" style="text-decoration:none">🏥 SmartCare</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="admin.html">Admin</a>
+      <a href="client.html" style="color:var(--accent)">Client Portal</a>
+    </div>
+  </nav>
+
+  <div class="portal-container">
+    <div class="section-label">Client Portal</div>
+    <h2 class="section-title">Manage Your Application</h2>
+    <p class="section-sub">Submit a new application or track the status of your existing requests.</p>
+
+    <div class="glass-card" style="margin-top:40px;">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('track')">🔍 Track Status</button>
+        <button class="tab-btn" onclick="switchTab('apply')">📝 New Application</button>
+      </div>
+
+      <!-- TRACK TAB -->
+      <div id="tab-track" class="tab-content active">
+        <div class="form-field" style="max-width:400px">
+          <label>Enter Registered Phone Number</label>
+          <div style="display:flex; gap:10px">
+            <input type="tel" id="trackPhone" placeholder="+91 98765 43210" style="flex:1">
+            <button class="btn btn-glow" onclick="trackApplication()">Search</button>
+          </div>
+        </div>
+        <div id="resultsArea" style="margin-top:32px">
+          <!-- Results inject here -->
+        </div>
+      </div>
+
+      <!-- APPLY TAB -->
+      <div id="tab-apply" class="tab-content">
+        <div class="appt-grid" style="margin-top:0">
+          <div class="form-field">
+            <label>Full Name *</label>
+            <input type="text" id="appName" placeholder="Your Name">
+          </div>
+          <div class="form-field">
+            <label>Phone Number *</label>
+            <input type="tel" id="appPhone" placeholder="Your Phone">
+          </div>
+          <div class="form-field full">
+            <label>Service Requested *</label>
+            <select id="appService">
+              <option value="General Health Checkup">General Health Checkup</option>
+              <option value="Specialist Consultation">Specialist Consultation</option>
+              <option value="Diagnostic Tests">Diagnostic Tests</option>
+              <option value="Surgery Pre-approval">Surgery Pre-approval</option>
+            </select>
+          </div>
+          <div class="form-field full">
+            <label>Additional Notes</label>
+            <input type="text" id="appNotes" placeholder="Any specific requirements...">
+          </div>
+          <div class="full">
+            <button class="btn btn-glow" onclick="submitApplication()"
+              style="width:100%; justify-content:center; padding:16px">
+              Submit Application
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="client_db.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(`switchTab('${tab}')`));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    initClientDB().then(() => {
+      console.log("Client DB Ready");
+    }).catch(e => console.error(e));
+
+    async function submitApplication() {
+      const name = document.getElementById('appName').value.trim();
+      const phone = document.getElementById('appPhone').value.trim();
+      const service = document.getElementById('appService').value;
+      const notes = document.getElementById('appNotes').value.trim();
+
+      if (!name || !phone) {
+        showToast('Name and Phone are required!', 'error');
+        return;
+      }
+
+      if (!/^\d{10}$/.test(phone)) {
+        showToast('Phone number must be exactly 10 digits!', 'error');
+        return;
+      }
+
+      const appData = { name, phone, service, notes };
+
+      try {
+        const id = await saveApplication(appData);
+        showToast('Application Submitted! ID: ' + id);
+        document.getElementById('appName').value = '';
+        document.getElementById('appPhone').value = '';
+        document.getElementById('appNotes').value = '';
+        switchTab('track');
+        document.getElementById('trackPhone').value = phone;
+        trackApplication();
+      } catch (e) {
+        showToast('Error saving application', 'error');
+      }
+    }
+
+    async function trackApplication() {
+      const phone = document.getElementById('trackPhone').value.trim();
+      if (!phone) {
+        showToast('Enter a phone number', 'error');
+        return;
+      }
+
+      if (!/^\d{10}$/.test(phone)) {
+        showToast('Phone number must be exactly 10 digits!', 'error');
+        return;
+      }
+
+      const resArea = document.getElementById('resultsArea');
+      resArea.innerHTML = '<p style="color:var(--muted)">Searching...</p>';
+
+      try {
+        const apps = await getApplicationsByPhone(phone);
+        if (apps.length === 0) {
+          resArea.innerHTML = '<p style="color:var(--warn)">No applications found for this number.</p>';
+          return;
+        }
+
+        resArea.innerHTML = `<h3>Your Applications (${apps.length})</h3>`;
+
+        // Sort newest first
+        apps.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(app => {
+          const dateStr = new Date(app.date).toLocaleDateString();
+          resArea.innerHTML += `
+          <div class="result-card">
+            <div class="result-info">
+              <h4>${app.service}</h4>
+              <p>ID: ${app.id} • Date: ${dateStr}</p>
+            </div>
+            <span class="status-badge status-${app.status}">${app.status}</span>
+          </div>
+        `;
+        });
+      } catch (e) {
+        resArea.innerHTML = '<p style="color:var(--error)">Error fetching data.</p>';
+      }
+    }
+  </script>
+</body>
+
+</html>

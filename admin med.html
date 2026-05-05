@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SmartCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --surface: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff;
+            --text: #e8f0fe;
+            --muted: #8892a4;
+            --success: #00e676;
+            --warn: #ffab40;
+            --error: #ff5252
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 32px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(123, 94, 167, 0.08) 0%, transparent 50%);
+            pointer-events: none
+        }
+
+        /* Login Overlay */
+        #loginOverlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s;
+        }
+
+        .login-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 360px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-box h2 {
+            margin-bottom: 24px;
+            font-size: 1.4rem;
+        }
+
+        .login-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            padding: 12px 16px;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .login-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .login-box button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), #0099bb);
+            border: none;
+            color: #0b0f1a;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .login-box button:hover {
+            opacity: 0.9;
+        }
+
+        /* Dashboard */
+        .dashboard-content {
+            display: none;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: relative;
+            z-index: 1
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #7b5ea7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: border-color .2s
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1
+        }
+
+        .stat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            flex: 1;
+            min-width: 140px
+        }
+
+        .stat-box .num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent)
+        }
+
+        .stat-box .lbl {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-top: 4px
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 28px;
+            overflow-x: auto;
+        }
+
+        .panel h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .controls input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .2s;
+            width: 220px
+        }
+
+        .controls input:focus {
+            border-color: var(--accent)
+        }
+
+        .controls select {
+            background: #1a1f2e;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none
+        }
+
+        .btn-sm {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: opacity .2s
+        }
+
+        .btn-danger {
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--error);
+            border: 1px solid rgba(255, 82, 82, 0.3)
+        }
+
+        .btn-export {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(0, 212, 255, 0.3)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 800px;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle
+        }
+
+        tr:last-child td {
+            border-bottom: none
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03)
+        }
+
+        .status-select {
+            background: #1a1f2e;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            padding: 4px 8px;
+            font-size: 0.78rem;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .status-Pending {
+            color: var(--warn);
+        }
+
+        .status-Approved {
+            color: var(--success);
+        }
+
+        .status-Rejected {
+            color: var(--error);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 48px;
+            color: var(--muted);
+            font-size: 0.95rem
+        }
+
+        #toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: .875rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s;
+            z-index: 10001;
+            background: #1a7a3c
+        }
+
+        #toast.show {
+            opacity: 1
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast"></div>
+
+    <!-- Login Screen -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>🔒 Admin Login</h2>
+            <input type="password" id="adminPwd" placeholder="Enter Password"
+                onkeydown="if(event.key==='Enter') loginAdmin()">
+            <button onclick="loginAdmin()">Login</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content" id="dashboard">
+        <div class="header">
+            <span class="logo">🏥 Client Applications Admin</span>
+            <a href="index.html" class="back-btn">← Back to Main Site</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="num" id="statTotal">0</div>
+                <div class="lbl">Total Applications</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="statPending" style="color:var(--warn)">0</div>
+                <div class="lbl">Pending</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="statApproved" style="color:var(--success)">0</div>
+                <div class="lbl">Approved</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="statRejected" style="color:var(--error)">0</div>
+                <div class="lbl">Rejected</div>
+            </div>
+        </div>
+
+        <!-- Applications Table -->
+        <div class="panel">
+            <h2>📋 Client Applications</h2>
+            <div class="controls">
+                <input type="text" id="searchBox" placeholder="Search by name, ID, phone..." oninput="renderTable()">
+                <select id="filterStatus" onchange="renderTable()">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+                <button class="btn-sm btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+                <button class="btn-sm btn-danger" onclick="clearAll()">🗑 Clear All</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>App ID</th>
+                        <th>Client Name</th>
+                        <th>Phone</th>
+                        <th>Service Requested</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>Submitted Date</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ── LOGIN SYSTEM ──
+        function loginAdmin() {
+            const pwd = document.getElementById('adminPwd').value;
+            if (pwd === 'admin123') {
+                document.getElementById('loginOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    initDB().then(loadData);
+                }, 500);
+                showToast('Login Successful!', 'success');
+            } else {
+                showToast('Incorrect Password!', 'error');
+            }
+        }
+
+        // ── TOAST ──
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.background = type === 'success' ? '#1a7a3c' : '#a32a2a';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ── DATABASE SYSTEM ──
+        const DB_NAME = 'SmartCareClientDB', DB_VERSION = 1;
+        let db, allRecords = [];
+
+        function initDB() {
+            return new Promise((res, rej) => {
+                const r = indexedDB.open(DB_NAME, DB_VERSION);
+                // Even if we are just reading, we define upgrade in case admin visits first
+                r.onupgradeneeded = e => {
+                    const d = e.target.result;
+                    if (!d.objectStoreNames.contains('applications')) {
+                        const s = d.createObjectStore('applications', { keyPath: 'id' });
+                        s.createIndex('phone', 'phone', { unique: false });
+                        s.createIndex('status', 'status', { unique: false });
+                    }
+                };
+                r.onsuccess = e => { db = e.target.result; res(db); };
+                r.onerror = e => rej(e.target.error);
+            });
+        }
+
+        function getAllRecords() {
+            return new Promise((res, rej) => {
+                if (!db) return res([]);
+                try {
+                    const tx = db.transaction('applications', 'readonly');
+                    const req = tx.objectStore('applications').getAll();
+                    req.onsuccess = () => res(req.result);
+                    req.onerror = () => res([]);
+                } catch (err) { res([]); }
+            });
+        }
+
+        function updateStatus(id, newStatus) {
+            const tx = db.transaction('applications', 'readwrite');
+            const store = tx.objectStore('applications');
+            const req = store.get(id);
+
+            req.onsuccess = () => {
+                const rec = req.result;
+                if (rec) {
+                    rec.status = newStatus;
+                    store.put(rec);
+                    loadData();
+                    showToast(`Application updated to ${newStatus}`);
+                }
+            };
+        }
+
+        // ── UI RENDERING ──
+        function renderTable() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            const filter = document.getElementById('filterStatus').value;
+            const tbody = document.getElementById('tableBody');
+
+            let rows = allRecords.filter(r => {
+                const matchSearch = !search ||
+                    (r.name && r.name.toLowerCase().includes(search)) ||
+                    (r.id && r.id.toLowerCase().includes(search)) ||
+                    (r.phone && r.phone.toLowerCase().includes(search));
+                const matchStatus = !filter || r.status === filter;
+                return matchSearch && matchStatus;
+            });
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty">No applications found.</div></td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = rows.map(r => {
+                const dateStr = r.date ? new Date(r.date).toLocaleString() : '—';
+                return `
+    <tr>
+      <td style="color:var(--muted); font-family:monospace;">${r.id}</td>
+      <td><strong>${r.name || '—'}</strong></td>
+      <td>${r.phone || '—'}</td>
+      <td>${r.service || '—'}</td>
+      <td style="color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.notes || '—'}</td>
+      <td>
+        <select class="status-select status-${r.status}" onchange="updateStatus('${r.id}', this.value)">
+          <option value="Pending" ${r.status === 'Pending' ? 'selected' : ''} class="status-Pending">Pending</option>
+          <option value="Approved" ${r.status === 'Approved' ? 'selected' : ''} class="status-Approved">Approved</option>
+          <option value="Rejected" ${r.status === 'Rejected' ? 'selected' : ''} class="status-Rejected">Rejected</option>
+        </select>
+      </td>
+      <td style="color:var(--muted);font-size:.78rem">${dateStr}</td>
+    </tr>
+  `}).join('');
+        }
+
+        function updateStats(records) {
+            document.getElementById('statTotal').textContent = records.length;
+            document.getElementById('statPending').textContent = records.filter(r => r.status === 'Pending').length;
+            document.getElementById('statApproved').textContent = records.filter(r => r.status === 'Approved').length;
+            document.getElementById('statRejected').textContent = records.filter(r => r.status === 'Rejected').length;
+        }
+
+        async function loadData() {
+            allRecords = await getAllRecords();
+            allRecords.sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
+            updateStats(allRecords);
+            renderTable();
+        }
+
+        function clearAll() {
+            if (!confirm('Delete ALL applications? This cannot be undone.')) return;
+            const tx = db.transaction('applications', 'readwrite');
+            tx.objectStore('applications').clear();
+            tx.oncomplete = () => { loadData(); showToast('All records cleared.'); };
+        }
+
+        function exportCSV() {
+            if (!allRecords.length) return showToast('No records to export.', 'error');
+            const headers = ['App ID', 'Client Name', 'Phone', 'Service', 'Notes', 'Status', 'Submitted Date'];
+            const rows = allRecords.map(r =>
+                [r.id, r.name, r.phone, r.service, r.notes, r.status, r.date]
+                    .map(v => `"${(v || '').toString().replace(/"/g, '""')}"`).join(',')
+            );
+            const csv = [headers.join(','), ...rows].join('\n');
+            const a = document.createElement('a');
+            a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            a.download = 'smartcare_applications.csv';
+            a.click();
+        }
+    </script>
+</body>
+
+</html>
